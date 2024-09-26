@@ -8,9 +8,7 @@ import { RouterView } from 'vue-router';
 
 <template>
 	<div class="flow">
-		<SwapyDemo />
-		<!-- <Dice /> -->
-		<!-- <RouterView /> -->
+		<RouterView />
 	</div>
   
 
