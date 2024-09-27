@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { createSwapy } from 'swapy'
 import type { Swapy } from 'swapy';
-import { onMounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 import type { Ref } from 'vue';
 
 const getRandomIntInRange = (min: number, max: number) => {
@@ -58,8 +58,6 @@ onMounted(() => {
     swapy.value.onSwap(({ data }) => {
         summedDice.value = 0
         for (let key in data.object) {
-            console.log(key)
-            console.log(data.object[key])
             // how i'm currently identifying slots in the sum is by key length
             if (key.length == 1 && data.object[key]) {
                 console.log(`There is an object of id ${data.object[key]} at slot id ${key}`)
@@ -75,12 +73,22 @@ onMounted(() => {
   }
 })
 
+onUnmounted(() => {
+    console.log("Unmounted component, callback running")
+    swapy.value?.destroy() // I'm not exactly sure if this could cause problems with localstorage later. Something to remain aware of.
+})
+
 const summedDice = ref(0)
 
 </script>
 
 <template>
-    <h1>Dicerow: {{ summedDice }}</h1>
+    <h2>
+        Dicerow
+    </h2>
+    <h1>
+        Sum: {{ summedDice }}
+    </h1>
     <div 
     class="demo-container"
     ref="container"
@@ -108,7 +116,11 @@ const summedDice = ref(0)
 
         </div>
 
-    <h1 @click="console.log(swapy)">Dice pool</h1>
+    <h1 
+    @click="console.log(swapy)"
+    >
+        Dice pool
+    </h1>
 
     <div class="pool">
         <div 
@@ -134,6 +146,14 @@ const summedDice = ref(0)
  </template>
 
 <style scoped>
+
+h1 {
+    /* border: 2px solid black; */
+    text-align: center;
+    font-weight: 600;
+    font-size: 2.2rem;
+}
+
 .demo-container {
     display: flex;
     flex-direction: column;
@@ -175,7 +195,7 @@ const summedDice = ref(0)
 }
 
 .dice {
-    font-size: 2rem;
+    font-size: 3rem;
     font-weight: 800;
     min-height: 40px;
     height: 90%;
