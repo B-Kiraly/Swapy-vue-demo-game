@@ -105,3 +105,27 @@ body,
   left: 0;
   padding: 10px;
 }
+
+/* DICE STUFF */
+.dice {
+  font-size: 3rem;
+  font-weight: 800;
+  min-height: 40px;
+  height: 90%;
+  aspect-ratio: 1;
+  background-color: rgb(75, 74, 74);
+  border: 1px solid black;
+  border-radius: 0.5rem;
+  color: white;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  position: relative;
+}
+
+.button {
+  font-size: 1.5rem;
+  padding-block: 0.5rem;
+}

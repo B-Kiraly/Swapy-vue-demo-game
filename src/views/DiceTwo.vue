@@ -5,7 +5,6 @@ import { onMounted, onUnmounted, ref } from 'vue'
 import type { Ref } from 'vue';
 
 const getRandomIntInRange = (min: number, max: number) => {
-    // explanation: https://stackoverflow.com/questions/1527803/generating-random-whole-numbers-in-javascript-in-a-specific-range
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -54,18 +53,17 @@ const swapy: Ref<Swapy | null> = ref(null)
 
 onMounted(() => {
   if (container.value) {
-    swapy.value = createSwapy(container.value)
+    swapy.value = createSwapy(container.value, {continuousMode: false})
     swapy.value.onSwap(({ data }) => {
-        console.log(data)
         summedDice.value = 0
         for (let key in data.object) {
             // how i'm currently identifying slots in the sum is by key length
             if (key.length == 1 && data.object[key]) {
-                // console.log(`There is an object of id ${data.object[key]} at slot id ${key}`)
+                console.log(`There is an object of id ${data.object[key]} at slot id ${key}`)
 
                 let diceObj = filterDiceListById(data.object[key])
                 if (diceObj) {
-                    // console.log(`Found a dice with a value of ${diceObj.value}!`)
+                    console.log(`Found a dice with a value of ${diceObj.value}!`)
                     summedDice.value += diceObj.value
                 }
             }
@@ -85,7 +83,7 @@ const summedDice = ref(0)
 
 <template>
     <h2>
-        Dicerow
+        Dice Two
     </h2>
     <h1>
         Sum: {{ summedDice }}
@@ -108,7 +106,38 @@ const summedDice = ref(0)
             <div 
             class="diceholder c"
             :data-swapy-slot="3">
+                <!-- <div 
+                class="dice f"
+                data-swapy-item="f">
+                <div>F</div>
+                </div> -->
             </div>
+
+            <h1>Total Here</h1>
+
+        </div>
+        <div class="dicerow">
+            <div 
+            class="diceholder a"
+            :data-swapy-slot="4">
+            </div>
+
+            <div 
+            class="diceholder b"
+            :data-swapy-slot="5">
+            </div>
+
+            <div 
+            class="diceholder c"
+            :data-swapy-slot="6">
+                <!-- <div 
+                class="dice f"
+                data-swapy-item="f">
+                <div>F</div>
+                </div> -->
+            </div>
+
+            <h1>Total Here</h1>
 
         </div>
 

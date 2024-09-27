@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import SwapyDemo from '@/views/SwapyDemo.vue'
 import Dice from '@/views/Dice.vue'
+import DiceTwo from '@/views/DiceTwo.vue'
 import AboutView from '../views/AboutView.vue'
 
 const router = createRouter({
@@ -28,6 +29,11 @@ const router = createRouter({
       path: '/dice',
       name: 'dice',
       component: Dice
+    },
+    {
+      path: '/dicetwo',
+      name: 'dicetwo',
+      component: DiceTwo
     }
   ]
 })
