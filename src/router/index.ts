@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import SwapyDemo from '@/SwapyDemo.vue'
-import Dice from '@/Dice.vue'
+import SwapyDemo from '@/views/SwapyDemo.vue'
+import Dice from '@/views/Dice.vue'
 import AboutView from '../views/AboutView.vue'
 
 const router = createRouter({

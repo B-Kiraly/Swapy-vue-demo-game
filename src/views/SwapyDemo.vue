@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { createSwapy } from 'swapy'
 import { onMounted, ref } from 'vue'
-import A from './components/A.vue'
-import C from './components/C.vue'
-import D from './components/D.vue'
-import './style.css'
+import A from '@/components/A.vue';
+import C from '@/components/C.vue';
+import D from '@/components/D.vue';
 
 const DEFAULT = {
   '1': 'a',

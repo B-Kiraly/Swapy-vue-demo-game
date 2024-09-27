@@ -3,7 +3,6 @@ import { createSwapy } from 'swapy'
 import type { Swapy } from 'swapy';
 import { onMounted, ref } from 'vue'
 import type { Ref } from 'vue';
-import './style.css'
 
 const getRandomIntInRange = (min: number, max: number) => {
     // explanation: https://stackoverflow.com/questions/1527803/generating-random-whole-numbers-in-javascript-in-a-specific-range

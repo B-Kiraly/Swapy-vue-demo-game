@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import './style.css'
-import Dice from './Dice.vue';
-import SwapyDemo from './SwapyDemo.vue';
+import Dice from './views/Dice.vue';
+import SwapyDemo from './views/SwapyDemo.vue';
 import { RouterView } from 'vue-router';
 
 </script>
