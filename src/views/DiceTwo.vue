@@ -3,47 +3,29 @@ import { createSwapy } from 'swapy'
 import type { Swapy } from 'swapy';
 import { onMounted, onUnmounted, ref } from 'vue'
 import type { Ref } from 'vue';
+import { Dice, generateDice } from '@/utils';
+import DiceRow from '@/components/DiceRow.vue';
 
-const getRandomIntInRange = (min: number, max: number) => {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+// THE VIEWS PURPOSE IS TO BE THE GUINEA PIG TO THE MAIN DICE VIEWS MORE POLISHED PRESENTATION
 
-class Dice {
-    value: number
-    id: number
 
-    constructor(value: number) {
-        this.value = value
-        this.id = Math.floor(Math.random() * 100000000)
-    }
-}
+// to create unique identifiers for the slots in each diceRow component
+const diceRowIds = new Set(["a", "b"])
 
-const generateDice = (min=1, max=6) => {
-    if (min > max) {
-        const maxTemp = max
-        max = min
-        min = maxTemp
-    }
-    const numberVal = getRandomIntInRange(min, max)
+// const diceRowOneList: Ref<Dice[]> = ref([])
+// const diceRowTwoList: Ref<Dice[]> = ref([])
 
-    const dice = new Dice(numberVal)
+const dicePoolList: Ref<Dice[]> = ref([])
 
-    return dice 
-}
-
-const diceList: Ref<Dice[]> = ref([])
-
-const filterDiceListById = (id: string) => {
+const filterdicePoolListById = (id: string) => {
     let numberId = parseInt(id)
-    let potentialDice = diceList.value.find(obj => obj.id === numberId)
+    let potentialDice = dicePoolList.value.find(obj => obj.id === numberId)
     return potentialDice
 }
 
 const diceClick = () => {
     let newDice = generateDice()
-    diceList.value.push(newDice)
+    dicePoolList.value.push(newDice)
     // console.log(diceClick)
 }
 
@@ -53,15 +35,16 @@ const swapy: Ref<Swapy | null> = ref(null)
 
 onMounted(() => {
   if (container.value) {
-    swapy.value = createSwapy(container.value, {continuousMode: false})
+    swapy.value = createSwapy(container.value)
     swapy.value.onSwap(({ data }) => {
         summedDice.value = 0
         for (let key in data.object) {
+            console.log(key)
             // how i'm currently identifying slots in the sum is by key length
-            if (key.length == 1 && data.object[key]) {
+            if (key.length == 2 && data.object[key]) {
                 console.log(`There is an object of id ${data.object[key]} at slot id ${key}`)
 
-                let diceObj = filterDiceListById(data.object[key])
+                let diceObj = filterdicePoolListById(data.object[key])
                 if (diceObj) {
                     console.log(`Found a dice with a value of ${diceObj.value}!`)
                     summedDice.value += diceObj.value
@@ -73,7 +56,7 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
-    console.log("Unmounted component, callback running")
+    console.log("The DiceTwo component has been unmounted, callback running")
     swapy.value?.destroy() // I'm not exactly sure if this could cause problems with localstorage later. Something to remain aware of.
 })
 
@@ -92,54 +75,16 @@ const summedDice = ref(0)
     class="demo-container"
     ref="container"
     >
-        <div class="dicerow">
-            <div 
-            class="diceholder a"
-            :data-swapy-slot="1">
-            </div>
 
-            <div 
-            class="diceholder b"
-            :data-swapy-slot="2">
-            </div>
-
-            <div 
-            class="diceholder c"
-            :data-swapy-slot="3">
-                <!-- <div 
-                class="dice f"
-                data-swapy-item="f">
-                <div>F</div>
-                </div> -->
-            </div>
-
-            <h1>Total Here</h1>
-
-        </div>
-        <div class="dicerow">
-            <div 
-            class="diceholder a"
-            :data-swapy-slot="4">
-            </div>
-
-            <div 
-            class="diceholder b"
-            :data-swapy-slot="5">
-            </div>
-
-            <div 
-            class="diceholder c"
-            :data-swapy-slot="6">
-                <!-- <div 
-                class="dice f"
-                data-swapy-item="f">
-                <div>F</div>
-                </div> -->
-            </div>
-
-            <h1>Total Here</h1>
-
-        </div>
+        <!-- Could probably be made dynamic -->
+        <DiceRow 
+        :id-letter="Array.from(diceRowIds)[0]"
+        :dice-list="dicePoolList"
+        />
+        <DiceRow 
+        :id-letter="Array.from(diceRowIds)[1]"
+        :dice-list="dicePoolList"
+        />
 
     <h1 
     @click="console.log(swapy)"
@@ -149,7 +94,7 @@ const summedDice = ref(0)
 
     <div class="pool">
         <div 
-        v-for="dice in diceList"
+        v-for="dice in dicePoolList"
         class="diceholder d"
         :data-swapy-slot="dice.id"
         >
@@ -163,7 +108,7 @@ const summedDice = ref(0)
 
     </div>
 
-    <button class="button" @click="diceClick">Dice {{ diceList.length }}</button>
+    <button class="button" @click="diceClick">Dice {{ dicePoolList.length }}</button>
 
    </div>
     
@@ -195,28 +140,6 @@ h1 {
     place-items: center;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-}
-
-.dicerow {
-    min-height: 40px;
-    padding: 1rem;
-    border: 4px solid rgb(124, 2, 2);
-    display: grid;
-    place-items: center;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 0.6rem;
-}
-
-.diceholder {
-    min-width: 100px;
-    width: 100%;
-    aspect-ratio: 1;
-    background: #ffffff;
-    flex: 1;
-    border: 4px solid rgb(124, 2, 2);
-    /* flex-basis: 150px; */
-    display: grid;
-    place-items: center;
 }
 
 </style>

@@ -2,37 +2,10 @@
 import { createSwapy } from 'swapy'
 import type { Swapy } from 'swapy';
 import { onMounted, onUnmounted, ref } from 'vue'
-import type { Ref } from 'vue';
+import type { Ref } from 'vue'
+import { Dice, generateDice } from '@/utils';
 
-const getRandomIntInRange = (min: number, max: number) => {
-    // explanation: https://stackoverflow.com/questions/1527803/generating-random-whole-numbers-in-javascript-in-a-specific-range
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-class Dice {
-    value: number
-    id: number
-
-    constructor(value: number) {
-        this.value = value
-        this.id = Math.floor(Math.random() * 100000000)
-    }
-}
-
-const generateDice = (min=1, max=6) => {
-    if (min > max) {
-        const maxTemp = max
-        max = min
-        min = maxTemp
-    }
-    const numberVal = getRandomIntInRange(min, max)
-
-    const dice = new Dice(numberVal)
-
-    return dice 
-}
+// const dateTest = new Date().getTime()
 
 const diceList: Ref<Dice[]> = ref([])
 
@@ -56,7 +29,6 @@ onMounted(() => {
   if (container.value) {
     swapy.value = createSwapy(container.value)
     swapy.value.onSwap(({ data }) => {
-        console.log(data)
         summedDice.value = 0
         for (let key in data.object) {
             // how i'm currently identifying slots in the sum is by key length
@@ -75,7 +47,7 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
-    console.log("Unmounted component, callback running")
+    console.log("The Dice component has been unmounted, callback running")
     swapy.value?.destroy() // I'm not exactly sure if this could cause problems with localstorage later. Something to remain aware of.
 })
 
@@ -166,28 +138,6 @@ h1 {
     place-items: center;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-}
-
-.dicerow {
-    min-height: 40px;
-    padding: 1rem;
-    border: 4px solid rgb(124, 2, 2);
-    display: grid;
-    place-items: center;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 0.6rem;
-}
-
-.diceholder {
-    min-width: 100px;
-    width: 100%;
-    aspect-ratio: 1;
-    background: #ffffff;
-    flex: 1;
-    border: 4px solid rgb(124, 2, 2);
-    /* flex-basis: 150px; */
-    display: grid;
-    place-items: center;
 }
 
 </style>
