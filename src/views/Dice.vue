@@ -2,22 +2,24 @@
 import { createSwapy } from 'swapy'
 import type { Swapy } from 'swapy';
 import { onMounted, onUnmounted, ref } from 'vue'
-import type { Ref } from 'vue'
+import type { Ref } from 'vue';
 import { Dice, generateDice } from '@/utils';
+import DiceRow from '@/components/DiceRow.vue';
 
-// const dateTest = new Date().getTime()
+// to create unique identifiers for the slots in each diceRow component
+const diceRowIds = new Set(["a", "b"])
 
-const diceList: Ref<Dice[]> = ref([])
+const dicePoolList: Ref<Dice[]> = ref([])
 
-const filterDiceListById = (id: string) => {
+const filterdicePoolListById = (id: string) => {
     let numberId = parseInt(id)
-    let potentialDice = diceList.value.find(obj => obj.id === numberId)
+    let potentialDice = dicePoolList.value.find(obj => obj.id === numberId)
     return potentialDice
 }
 
 const diceClick = () => {
     let newDice = generateDice()
-    diceList.value.push(newDice)
+    dicePoolList.value.push(newDice)
     // console.log(diceClick)
 }
 
@@ -31,13 +33,14 @@ onMounted(() => {
     swapy.value.onSwap(({ data }) => {
         summedDice.value = 0
         for (let key in data.object) {
+            console.log(key)
             // how i'm currently identifying slots in the sum is by key length
-            if (key.length == 1 && data.object[key]) {
-                // console.log(`There is an object of id ${data.object[key]} at slot id ${key}`)
+            if (key.length == 2 && data.object[key]) {
+                console.log(`There is an object of id ${data.object[key]} at slot id ${key}`)
 
-                let diceObj = filterDiceListById(data.object[key])
+                let diceObj = filterdicePoolListById(data.object[key])
                 if (diceObj) {
-                    // console.log(`Found a dice with a value of ${diceObj.value}!`)
+                    console.log(`Found a dice with a value of ${diceObj.value}!`)
                     summedDice.value += diceObj.value
                 }
             }
@@ -57,7 +60,7 @@ const summedDice = ref(0)
 
 <template>
     <h2>
-        Dicerow
+        Dice Demo
     </h2>
     <h1>
         Sum: {{ summedDice }}
@@ -66,50 +69,40 @@ const summedDice = ref(0)
     class="demo-container"
     ref="container"
     >
-        <div class="dicerow">
-            <div 
-            class="diceholder a"
-            :data-swapy-slot="1">
-            </div>
-
-            <div 
-            class="diceholder b"
-            :data-swapy-slot="2">
-            </div>
-
-            <div 
-            class="diceholder c"
-            :data-swapy-slot="3">
-            </div>
-
-        </div>
-
-    <h1 
-    @click="console.log(swapy)"
-    >
-        Dice pool
-    </h1>
-
-    <div class="pool">
-        <div 
-        v-for="dice in diceList"
-        class="diceholder d"
-        :data-swapy-slot="dice.id"
+        <DiceRow 
+        v-for="id in diceRowIds"
+        :id-letter="id"
+        :dice-list="dicePoolList"
+        />
+        <h1 
+        @click="console.log(swapy)"
         >
+            Dice pool
+        </h1>
+
+        <div class="pool">
             <div 
-            class="dice e"
-            :data-swapy-item="dice.id"
+            v-for="dice in dicePoolList"
+            class="diceholder"
+            :data-swapy-slot="dice.id"
             >
-                <div>{{ dice.value }}</div>
+                <div 
+                class="dice"
+                :data-swapy-item="dice.id"
+                >
+                    <div>{{ dice.value }}</div>
+                </div>
             </div>
         </div>
+
+        <button 
+        class="button" 
+        @click="diceClick"
+        >
+        # of Dice: {{ dicePoolList.length }}
+        </button>
 
     </div>
-
-    <button class="button" @click="diceClick">Dice {{ diceList.length }}</button>
-
-   </div>
-    
    
  </template>
 

@@ -8,12 +8,8 @@ import DiceRow from '@/components/DiceRow.vue';
 
 // THE VIEWS PURPOSE IS TO BE THE GUINEA PIG TO THE MAIN DICE VIEWS MORE POLISHED PRESENTATION
 
-
 // to create unique identifiers for the slots in each diceRow component
 const diceRowIds = new Set(["a", "b"])
-
-// const diceRowOneList: Ref<Dice[]> = ref([])
-// const diceRowTwoList: Ref<Dice[]> = ref([])
 
 const dicePoolList: Ref<Dice[]> = ref([])
 
@@ -75,43 +71,40 @@ const summedDice = ref(0)
     class="demo-container"
     ref="container"
     >
-
-        <!-- Could probably be made dynamic -->
         <DiceRow 
-        :id-letter="Array.from(diceRowIds)[0]"
+        v-for="id in diceRowIds"
+        :id-letter="id"
         :dice-list="dicePoolList"
         />
-        <DiceRow 
-        :id-letter="Array.from(diceRowIds)[1]"
-        :dice-list="dicePoolList"
-        />
-
     <h1 
     @click="console.log(swapy)"
     >
         Dice pool
     </h1>
 
-    <div class="pool">
-        <div 
-        v-for="dice in dicePoolList"
-        class="diceholder d"
-        :data-swapy-slot="dice.id"
-        >
+        <div class="pool">
             <div 
-            class="dice e"
-            :data-swapy-item="dice.id"
+            v-for="dice in dicePoolList"
+            class="diceholder"
+            :data-swapy-slot="dice.id"
             >
-                <div>{{ dice.value }}</div>
+                <div 
+                class="dice"
+                :data-swapy-item="dice.id"
+                >
+                    <div>{{ dice.value }}</div>
+                </div>
             </div>
         </div>
 
-    </div>
-
-    <button class="button" @click="diceClick">Dice {{ dicePoolList.length }}</button>
+        <button 
+        class="button" 
+        @click="diceClick"
+        >
+        Dice {{ dicePoolList.length }}
+        </button>
 
    </div>
-    
    
  </template>
 
