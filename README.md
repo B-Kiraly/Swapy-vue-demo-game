@@ -23,6 +23,7 @@ PLAYERS: Not implemented. If there multiple 'players' to display onscreen using 
 ## Todo
 
 -Mechanics that clear empty dice pool slots (make dice slots less visible as well)
+-Figure out what the z-indexes of everything should be in order to keep the Dice on top, regardless of where they are dragged
 -For DiceRows: Make all but the first empty slot invisible so the rows look less hard-coded? 
 -Better safeguarding against colliding Swapy IDs for slots (Dice Pool) and items
 -Expand on the dice demo (Delete dice, etc)

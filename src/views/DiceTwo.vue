@@ -68,7 +68,7 @@ const summedDice = ref(0)
         Sum: {{ summedDice }}
     </h1>
     <div 
-    class="demo-container"
+    class="dice-demo"
     ref="container"
     >
         <DiceRow 
@@ -115,24 +115,6 @@ h1 {
     text-align: center;
     font-weight: 600;
     font-size: 2.2rem;
-}
-
-.demo-container {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    width: 100%;
-    max-width: 600px;
-    padding: 10px;
-}
-
-.pool {
-    min-height: 200px;
-    background-color: rgb(117, 77, 3);
-    border: 7px solid blue;
-    place-items: center;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
 }
 
 </style>

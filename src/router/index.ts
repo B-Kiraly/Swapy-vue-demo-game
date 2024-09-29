@@ -3,6 +3,7 @@ import SwapyDemo from '@/views/SwapyDemo.vue'
 import Dice from '@/views/Dice.vue'
 import DiceTwo from '@/views/DiceTwo.vue'
 import AboutView from '../views/AboutView.vue'
+import Zindex from '@/views/Zindex.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -15,9 +16,6 @@ const router = createRouter({
     {
       path: '/about',
       name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: AboutView
     },
     {
@@ -34,6 +32,11 @@ const router = createRouter({
       path: '/dicetwo',
       name: 'dicetwo',
       component: DiceTwo
+    },
+    {
+      path: '/zindex',
+      name: 'zindex',
+      component: Zindex
     }
   ]
 })
