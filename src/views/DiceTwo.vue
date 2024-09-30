@@ -1,23 +1,17 @@
 <script setup lang="ts">
 import { createSwapy } from 'swapy'
-import type { Swapy } from 'swapy';
+import type { Swapy, SwapEventObject } from 'swapy';
 import { onMounted, onUnmounted, ref } from 'vue'
 import type { Ref } from 'vue';
-import { Dice, generateDice } from '@/utils';
+import { Dice, generateDice, sumRowDice } from '@/utils';
 import DiceRow from '@/components/DiceRow.vue';
 
 // THE VIEWS PURPOSE IS TO BE THE GUINEA PIG TO THE MAIN DICE VIEWS MORE POLISHED PRESENTATION
 
 // to create unique identifiers for the slots in each diceRow component
-const diceRowIds = new Set(["a", "b"])
+const diceRowIds = new Set(["a"])
 
 const dicePoolList: Ref<Dice[]> = ref([])
-
-const filterdicePoolListById = (id: string) => {
-    let numberId = parseInt(id)
-    let potentialDice = dicePoolList.value.find(obj => obj.id === numberId)
-    return potentialDice
-}
 
 const diceClick = () => {
     let newDice = generateDice()
@@ -33,23 +27,28 @@ onMounted(() => {
   if (container.value) {
     swapy.value = createSwapy(container.value)
     swapy.value.onSwap(({ data }) => {
-        summedDice.value = 0
-        for (let key in data.object) {
-            console.log(key)
-            // how i'm currently identifying slots in the sum is by key length
-            if (key.length == 2 && data.object[key]) {
-                console.log(`There is an object of id ${data.object[key]} at slot id ${key}`)
-
-                let diceObj = filterdicePoolListById(data.object[key])
-                if (diceObj) {
-                    console.log(`Found a dice with a value of ${diceObj.value}!`)
-                    summedDice.value += diceObj.value
-                }
-            }
-        }
+        let sum = sumRowDice(data.object, dicePoolList.value)
+        summedDice.value = sum
+        cleanUpSlots(data.object)
     })
   }
 })
+
+const cleanUpSlots = (swapObj: SwapEventObject) => {
+    console.log("Searching for empty pool slots")
+    console.log(swapObj)
+    // let testBadKey = swapObj["bingo"]? "value found" : "value missing"
+    // console.log(testBadKey)
+
+    for (let key in swapObj) {
+        console.log(key.length)
+        if (key.length == 8 && !swapObj[key]) {
+            console.log(`Slot id.${key} is empty !!`)
+            // Now access the slot somehow?
+        }
+    }
+
+}
 
 onUnmounted(() => {
     console.log("The DiceTwo component has been unmounted, callback running")

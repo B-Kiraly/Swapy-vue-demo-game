@@ -1,3 +1,5 @@
+import type { SwapEventObject } from "swapy";
+
 export const getRandomIntInRange = (min: number, max: number) => {
     min = Math.ceil(min);
     max = Math.floor(max);
@@ -25,4 +27,27 @@ export const generateDice = (min=1, max=6) => {
     const dice = new Dice(numberVal)
 
     return dice 
+}
+
+const filterdicePoolListById = (id: string, diceList: Dice[]) => {
+    let numberId = parseInt(id)
+    let potentialDice = diceList.find(obj => obj.id === numberId)
+    return potentialDice
+}
+
+export const sumRowDice = (swapObj: SwapEventObject, diceList: Dice[]): number => {
+    let sum = 0
+        for (let key in swapObj) {
+            // how i'm currently identifying slots in the sum is by key length
+            if (key.length == 2 && swapObj[key]) {
+                console.log(`There is an object of id ${swapObj[key]} at slot id ${key}`)
+
+                let diceObj = filterdicePoolListById(swapObj[key], diceList)
+                if (diceObj) {
+                    console.log(`Found a dice with a value of ${diceObj.value}!`)
+                    sum += diceObj.value
+                }
+            }
+        }
+        return sum
 }
