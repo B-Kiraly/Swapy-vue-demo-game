@@ -11,11 +11,15 @@ import DiceRow from '@/components/DiceRow.vue';
 // to create unique identifiers for the slots in each diceRow component
 const diceRowIds = new Set(["a"])
 
-const dicePoolList: Ref<Dice[]> = ref([])
+// DO ALL OF THESE ACTUALLY NEED TO BE REFS???
+const diceList: Ref<Dice[]> = ref([])
+const slotIdList: Ref<number[]> = ref([])
+const mostRecentSwapObject: Ref<SwapEventObject | null> = ref(null)
 
 const diceClick = () => {
     let newDice = generateDice()
-    dicePoolList.value.push(newDice)
+    diceList.value.push(newDice)
+    slotIdList.value.push(newDice.id)
     // console.log(diceClick)
 }
 
@@ -27,8 +31,9 @@ onMounted(() => {
   if (container.value) {
     swapy.value = createSwapy(container.value)
     swapy.value.onSwap(({ data }) => {
-        let sum = sumRowDice(data.object, dicePoolList.value)
+        let sum = sumRowDice(data.object, diceList.value)
         summedDice.value = sum
+        mostRecentSwapObject.value = data.object
         cleanUpSlots(data.object)
     })
   }
@@ -73,7 +78,7 @@ const summedDice = ref(0)
         <DiceRow 
         v-for="id in diceRowIds"
         :id-letter="id"
-        :dice-list="dicePoolList"
+        :dice-list="diceList"
         />
     <h1 
     @click="console.log(swapy)"
@@ -83,7 +88,7 @@ const summedDice = ref(0)
 
         <div class="pool">
             <div 
-            v-for="dice in dicePoolList"
+            v-for="dice in diceList"
             class="diceholder"
             :data-swapy-slot="dice.id"
             >
@@ -100,7 +105,7 @@ const summedDice = ref(0)
         class="button" 
         @click="diceClick"
         >
-        Dice {{ dicePoolList.length }}
+        Dice {{ diceList.length }}
         </button>
 
    </div>
@@ -108,12 +113,7 @@ const summedDice = ref(0)
 </template>
 
 <style scoped>
-
-h1 {
-    /* border: 2px solid black; */
-    text-align: center;
-    font-weight: 600;
-    font-size: 2.2rem;
-}
-
+    .pool {
+        background-color: aqua;
+    }
 </style>

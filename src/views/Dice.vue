@@ -115,4 +115,8 @@ h1 {
     font-size: 2.2rem;
 }
 
+.pool {
+    background-color: orange;
+}
+
 </style>
