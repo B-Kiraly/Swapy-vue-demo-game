@@ -12,7 +12,7 @@ export class Dice {
 
     constructor(value: number) {
         this.value = value
-        this.id = Math.floor(Math.random() * 100000000)
+        this.id = getRandomIntInRange(10000000, 99999999) // ensures the id will always be 8 characters long
     }
 }
 
