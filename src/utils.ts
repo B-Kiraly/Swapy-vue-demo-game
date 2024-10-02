@@ -16,6 +16,19 @@ export class Dice {
     }
 }
 
+// NOT YET IMPLEMENTED 
+export class DiceSlot {
+    id: number 
+    displayOnscreen: boolean
+    
+    constructor(id: number, displayOnscreen: boolean) {
+        this.id = id
+        this.displayOnscreen = displayOnscreen
+    }
+
+    // probably should make the check/toggle for visibility a class function? 
+}
+
 export const generateDice = (min=1, max=6) => {
     if (min > max) {
         const maxTemp = max

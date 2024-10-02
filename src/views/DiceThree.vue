@@ -5,6 +5,7 @@ import { onMounted, onUnmounted, ref } from 'vue'
 import type { Ref } from 'vue';
 import { Dice, generateDice, sumRowDice } from '@/utils';
 import DiceRow from '@/components/DiceRow.vue';
+import DicePool from '@/components/DicePool.vue';
 
 // THE VIEWS PURPOSE IS TO BE THE GUINEA PIG TO THE MAIN DICE VIEWS MORE POLISHED PRESENTATION
 
@@ -13,20 +14,20 @@ const diceRowIds = new Set(["a"])
 
 // DO ALL OF THESE ACTUALLY NEED TO BE REFS???
 const diceList: Ref<Dice[]> = ref([])
-const slotIdList: Ref<number[]> = ref([])
+// const slotIdList: Ref<number[]> = ref([])
 const mostRecentSwapObject: Ref<SwapEventObject | null> = ref(null)
 
 const diceClick = () => {
     let newDice = generateDice()
     diceList.value.push(newDice)
-    slotIdList.value.push(newDice.id)
-    // console.log(diceClick)
+
 }
 
 const container = ref<HTMLDivElement | null>(null) // contains the ref of the container where all the data is swapped around in
 
 const swapy: Ref<Swapy | null> = ref(null)
 
+// Runs frequently (perhaps every rerender trigger) after being mounted
 onMounted(() => {
   if (container.value) {
     swapy.value = createSwapy(container.value)
@@ -40,15 +41,13 @@ onMounted(() => {
 })
 
 const cleanUpSlots = (swapObj: SwapEventObject) => {
-    console.log("Searching for empty pool slots")
-    console.log(swapObj)
-    // let testBadKey = swapObj["bingo"]? "value found" : "value missing"
-    // console.log(testBadKey)
+    // console.log("Searching for empty pool slots")
+    // console.log(swapObj)
 
     for (let key in swapObj) {
-        console.log(key.length)
+        // console.log(key.length)
         if (key.length == 8 && !swapObj[key]) {
-            console.log(`Slot id.${key} is empty !!`)
+            // console.log(`Slot id.${key} is empty !!`)
             // Now access the slot somehow?
         }
     }
@@ -66,7 +65,7 @@ const summedDice = ref(0)
 
 <template>
     <h2>
-        Dice Two
+        DICE THREE
     </h2>
     <h1>
         Sum: {{ summedDice }}
@@ -79,6 +78,7 @@ const summedDice = ref(0)
         v-for="id in diceRowIds"
         :id-letter="id"
         :dice-list="diceList"
+        :swap-obj="mostRecentSwapObject"
         />
     <h1 
     @click="console.log(swapy)"
@@ -86,20 +86,10 @@ const summedDice = ref(0)
         Dice pool
     </h1>
 
-        <div class="pool">
-            <div 
-            v-for="dice in diceList"
-            class="diceholder"
-            :data-swapy-slot="dice.id"
-            >
-                <div 
-                class="dice"
-                :data-swapy-item="dice.id"
-                >
-                    <div>{{ dice.value }}</div>
-                </div>
-            </div>
-        </div>
+        <DicePool 
+        :dice-list="diceList" 
+        :swap-obj="mostRecentSwapObject"
+        />
 
         <button 
         class="button" 

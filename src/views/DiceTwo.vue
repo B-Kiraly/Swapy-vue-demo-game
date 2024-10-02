@@ -73,7 +73,6 @@ const summedDice = ref(0)
         <DiceRow 
         v-for="id in diceRowIds"
         :id-letter="id"
-        :dice-list="dicePoolList"
         />
     <h1 
     @click="console.log(swapy)"

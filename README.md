@@ -22,11 +22,12 @@ PLAYERS: Not implemented. If there multiple 'players' to display onscreen using 
 
 ## Todo
 
+-Figure out dice visibility checking system (standalone component? slot class? keep experiementing)
 -Mechanics that clear empty dice pool slots (make dice slots less visible as well)
 -For DiceRows: Make all but the first empty slot invisible so the rows look less hard-coded? 
 -Better safeguarding against colliding Swapy IDs for slots (Dice Pool) and items
+-standalone dice slot component? (Could help make their display dynamic)
 -Expand on the dice demo (Delete dice, etc)
--Standalone Dice pool component? 
 -Make a game out of the dice demo? (match number, submit values to a global counter?)
 -Figure out why swapy localstorage for component positions is no longer working
 
