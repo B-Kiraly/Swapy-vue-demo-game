@@ -3,6 +3,7 @@ import SwapyDemo from '@/views/SwapyDemo.vue'
 import Dice from '@/views/Dice.vue'
 import DiceTwo from '@/views/DiceTwo.vue'
 import DiceThree from '@/views/DiceThree.vue'
+import DiceSetDemo from '@/views/DiceSetDemo.vue'
 import AboutView from '../views/AboutView.vue'
 import Zindex from '@/views/Zindex.vue'
 
@@ -43,6 +44,11 @@ const router = createRouter({
       path: '/zindex',
       name: 'zindex',
       component: Zindex
+    },
+    {
+      path: '/setdice',
+      name: 'setdice',
+      component: DiceSetDemo
     }
   ]
 })

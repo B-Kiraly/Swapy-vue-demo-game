@@ -5,6 +5,8 @@ import A from '@/components/A.vue';
 import C from '@/components/C.vue';
 import D from '@/components/D.vue';
 
+// TEST THIS UNDEFINED ELEMENT BUG
+
 const DEFAULT = {
   '1': 'a',
   '3': 'c',
@@ -13,12 +15,12 @@ const DEFAULT = {
 }
 const slotItems: Record<string, 'a' | 'c' | 'd' | null> = localStorage.getItem('slotItem') ? JSON.parse(localStorage.getItem('slotItem')!) : DEFAULT
 
-const container = ref<HTMLDivElement | null>(null)
+const container = ref<HTMLDivElement | null>(null) // contains the ref of the container where all the data is swapped around in
+
 
 onMounted(() => {
   if (container.value) {
     const demoSwapy = createSwapy(container.value)
-    // console.log("DEBUG SWAPY DEMO")
     demoSwapy.onSwap(({ data }) => {
       console.log("Swap performed")
       // localStorage.setItem('slotItem', JSON.stringify(data.object))

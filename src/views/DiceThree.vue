@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { createSwapy } from 'swapy'
-import type { Swapy, SwapEventObject } from 'swapy';
+import type { SwapEventObject } from 'swapy';
 import { onMounted, onUnmounted, ref } from 'vue'
 import type { Ref } from 'vue';
 import { Dice, generateDice, sumRowDice } from '@/utils';
@@ -23,20 +23,27 @@ const diceClick = () => {
 
 }
 
-const container = ref<HTMLDivElement | null>(null) // contains the ref of the container where all the data is swapped around in
-
-const swapy: Ref<Swapy | null> = ref(null)
-
+const container = ref<HTMLDivElement | null>(null) 
 // Runs frequently (perhaps every rerender trigger) after being mounted
 onMounted(() => {
   if (container.value) {
-    swapy.value = createSwapy(container.value)
-    swapy.value.onSwap(({ data }) => {
+    const swapy = createSwapy(container.value)
+    swapy.onSwap(({ data }) => {
+        console.log("on swap activating")
         let sum = sumRowDice(data.object, diceList.value)
         summedDice.value = sum
         mostRecentSwapObject.value = data.object
-        cleanUpSlots(data.object)
     })
+    swapy.onSwapEnd(({data, hasChanged}) => {
+        cleanUpSlots(data.object)
+        console.log(hasChanged ? "bing" : "bong")
+    })
+
+    // see if this works
+    onUnmounted(() => {
+    console.log("The DiceTwo component has been unmounted, callback running")
+    swapy.destroy() // I'm not exactly sure if this could cause problems with localstorage later. Something to remain aware of.
+})
   }
 })
 
@@ -44,20 +51,19 @@ const cleanUpSlots = (swapObj: SwapEventObject) => {
     // console.log("Searching for empty pool slots")
     // console.log(swapObj)
 
+    let emptyPoolSlots = []
+
     for (let key in swapObj) {
         // console.log(key.length)
         if (key.length == 8 && !swapObj[key]) {
-            // console.log(`Slot id.${key} is empty !!`)
+            console.log(`Slot id.${key} is empty !!`)
             // Now access the slot somehow?
+            emptyPoolSlots.push(key)
         }
     }
 
-}
 
-onUnmounted(() => {
-    console.log("The DiceTwo component has been unmounted, callback running")
-    swapy.value?.destroy() // I'm not exactly sure if this could cause problems with localstorage later. Something to remain aware of.
-})
+}
 
 const summedDice = ref(0)
 
@@ -81,7 +87,7 @@ const summedDice = ref(0)
         :swap-obj="mostRecentSwapObject"
         />
     <h1 
-    @click="console.log(swapy)"
+    @click="console.log('idk')"
     >
         Dice pool
     </h1>

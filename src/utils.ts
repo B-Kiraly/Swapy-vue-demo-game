@@ -64,3 +64,38 @@ export const sumRowDice = (swapObj: SwapEventObject, diceList: Dice[]): number =
         }
         return sum
 }
+
+// DICE SET FUNCTIONS (TEST THEM PLEASE!!!)
+
+export const deleteDiceFromSet = (dice: Dice, diceSet: Set<Dice>) => {
+
+    const hasDice = diceSet.has(dice)
+
+    if (hasDice) diceSet.delete(dice)
+}
+
+export const searchDiceSetById = (id: string, diceSet: Set<Dice>) => {
+
+    let numberId = parseInt(id)
+    let diceList = Array.from(diceSet)
+    let potentialDice = diceList.find(obj => obj.id === numberId)
+    return potentialDice
+}
+
+const sumRowDiceSetVersion = (swapObj: SwapEventObject, diceSet: Set<Dice>): number => {
+    let sum = 0
+    let diceList = Array.from(diceSet)
+        for (let key in swapObj) {
+            // how i'm currently identifying slots in the sum is by key length
+            if (key.length == 2 && swapObj[key]) {
+                console.log(`There is an object of id ${swapObj[key]} at slot id ${key}`)
+
+                let diceObj = filterdicePoolListById(swapObj[key], diceList)
+                if (diceObj) {
+                    console.log(`Found a dice with a value of ${diceObj.value}!`)
+                    sum += diceObj.value
+                }
+            }
+        }
+        return sum
+}

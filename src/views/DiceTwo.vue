@@ -1,109 +1,85 @@
 <script setup lang="ts">
-import { createSwapy } from 'swapy'
-import type { Swapy, SwapEventObject } from 'swapy';
-import { onMounted, onUnmounted, ref } from 'vue'
-import type { Ref } from 'vue';
-import { Dice, generateDice, sumRowDice } from '@/utils';
+import { createSwapy, type SwapEventObject } from 'swapy'
+import { onMounted, ref, type Ref } from 'vue'
+import A from '@/components/A.vue';
+import C from '@/components/C.vue';
+import D from '@/components/D.vue';
+import { Dice, generateDice, sumRowDice  } from '@/utils';
 import DiceRow from '@/components/DiceRow.vue';
+import DicePool from '@/components/DicePool.vue';
+import DiceUnit from '@/components/DiceUnit.vue';
 
-// THE VIEWS PURPOSE IS TO BE THE GUINEA PIG TO THE MAIN DICE VIEWS MORE POLISHED PRESENTATION
+// TEST THIS UNDEFINED ELEMENT BUG
 
-// to create unique identifiers for the slots in each diceRow component
-const diceRowIds = new Set(["a"])
-
-const dicePoolList: Ref<Dice[]> = ref([])
-
-const diceClick = () => {
-    let newDice = generateDice()
-    dicePoolList.value.push(newDice)
-    // console.log(diceClick)
+const DEFAULT = {
+  '1': 'a',
+  '3': 'c',
+  '4': 'd',
+  '2': null
 }
+const slotItems: Record<string, 'a' | 'c' | 'd' | null> = localStorage.getItem('slotItem') ? JSON.parse(localStorage.getItem('slotItem')!) : DEFAULT
+
+
+const diceList: Ref<Dice[]> = ref([])
+
+const diceRowIds = new Set(["a"])
 
 const container = ref<HTMLDivElement | null>(null) // contains the ref of the container where all the data is swapped around in
 
-const swapy: Ref<Swapy | null> = ref(null)
 
 onMounted(() => {
   if (container.value) {
-    swapy.value = createSwapy(container.value)
-    swapy.value.onSwap(({ data }) => {
-        let sum = sumRowDice(data.object, dicePoolList.value)
-        summedDice.value = sum
-        cleanUpSlots(data.object)
+    const demoSwapy = createSwapy(container.value)
+    demoSwapy.onSwap(({ data }) => {
+      console.log("Swap performed")
+      // localStorage.setItem('slotItem', JSON.stringify(data.object))
     })
   }
 })
 
-const cleanUpSlots = (swapObj: SwapEventObject) => {
-    console.log("Searching for empty pool slots")
-    console.log(swapObj)
-    // let testBadKey = swapObj["bingo"]? "value found" : "value missing"
-    // console.log(testBadKey)
+const mostRecentSwapObject: Ref<SwapEventObject | null> = ref(null)
 
-    for (let key in swapObj) {
-        console.log(key.length)
-        if (key.length == 8 && !swapObj[key]) {
-            console.log(`Slot id.${key} is empty !!`)
-            // Now access the slot somehow?
-        }
-    }
+const diceClick = () => {
+    let newDice = generateDice()
+    diceList.value.push(newDice)
 
 }
-
-onUnmounted(() => {
-    console.log("The DiceTwo component has been unmounted, callback running")
-    swapy.value?.destroy() // I'm not exactly sure if this could cause problems with localstorage later. Something to remain aware of.
-})
-
-const summedDice = ref(0)
 
 </script>
 
 <template>
-    <h2>
-        Dice Two
-    </h2>
-    <h1>
-        Sum: {{ summedDice }}
-    </h1>
+    <h2>bingo!</h2>
     <div 
-    class="dice-demo"
+    class="container"
     ref="container"
+    @click="console.log(container)"
     >
-        <DiceRow 
-        v-for="id in diceRowIds"
-        :id-letter="id"
-        />
-    <h1 
-    @click="console.log(swapy)"
+
+    <DiceRow 
+    v-for="id in diceRowIds"
+    :id-letter="id"
+    :dice-list="diceList"
+    />
+
+    <DicePool 
+    :dice-list="diceList" 
+    :swap-obj="mostRecentSwapObject"
+    />
+
+    <!-- Needs to exist in the code (I guess a minimum of one swap item?) for swapy to function in Swapy 0.4.1 -->
+    <DiceUnit 
+    v-show="false"
+    :dice="new Dice(3)"
+    />
+
+    <button 
+    class="button" 
+    @click="diceClick"
     >
-        Dice pool
-    </h1>
+    Dice {{ diceList.length }}
+    </button>
 
-        <div class="pool">
-            <div 
-            v-for="dice in dicePoolList"
-            class="diceholder"
-            :data-swapy-slot="dice.id"
-            >
-                <div 
-                class="dice"
-                :data-swapy-item="dice.id"
-                >
-                    <div>{{ dice.value }}</div>
-                </div>
-            </div>
-        </div>
-
-        <button 
-        class="button" 
-        @click="diceClick"
-        >
-        Dice {{ dicePoolList.length }}
-        </button>
-
-   </div>
-   
+  </div>
 </template>
 
 <style scoped>

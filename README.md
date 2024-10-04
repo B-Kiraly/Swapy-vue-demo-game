@@ -22,11 +22,10 @@ PLAYERS: Not implemented. If there multiple 'players' to display onscreen using 
 
 ## Todo
 
--Figure out dice visibility checking system (standalone component? slot class? keep experiementing)
--Mechanics that clear empty dice pool slots (make dice slots less visible as well)
+-Finish and test DiceSetDemo and the dice set-specific util functions
+-Figure out dice visibility checking system (standalone component? slot class? v-show?)
 -For DiceRows: Make all but the first empty slot invisible so the rows look less hard-coded? 
 -Better safeguarding against colliding Swapy IDs for slots (Dice Pool) and items
--standalone dice slot component? (Could help make their display dynamic)
 -Expand on the dice demo (Delete dice, etc)
 -Make a game out of the dice demo? (match number, submit values to a global counter?)
 -Figure out why swapy localstorage for component positions is no longer working
@@ -34,3 +33,9 @@ PLAYERS: Not implemented. If there multiple 'players' to display onscreen using 
 ## Notes
 
 Drop icon is from freepik
+
+### Swapy 
+
+updating to version 0.4.1 (from something like 0.3.0) has changed behaviour in a weird way. My dynamic swapy pages no longer work the way that they were. It appears that they now require at least one swapy-item exist in the container at mounting or else they break and not work. 
+
+The solution is fairly simple, I've just added one and left it invisible. Not the most elegant thing, but it works. Hopefully in a future update soon it will be corrected. 

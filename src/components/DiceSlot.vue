@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { Dice } from '@/utils';
+import DiceUnit from './DiceUnit.vue';
 
-// NOT IMPLEMENTED ANYWHERE YET
 // CURRENT ONLY IN THE DICEROW-STYLE CONFIGURATION 
 
-const { diceObj, slotId } = defineProps<{
-    diceObj?: Dice,
-    slotId: string
+const { slotId, diceObj } = defineProps<{
+    slotId: string,
+    diceObj?: Dice
 }>()
 
 </script>
@@ -17,5 +17,9 @@ const { diceObj, slotId } = defineProps<{
     :data-swapy-slot="slotId"
     >
         <!-- slot item dice data goes here -->
+         <DiceUnit 
+         v-if="diceObj"
+         :dice="diceObj"
+         />
     </div>
 </template>
