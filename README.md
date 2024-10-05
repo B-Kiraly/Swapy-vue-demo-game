@@ -36,6 +36,8 @@ Drop icon is from freepik
 
 ### Swapy 
 
-updating to version 0.4.1 (from something like 0.3.0) has changed behaviour in a weird way. My dynamic swapy pages no longer work the way that they were. It appears that they now require at least one swapy-item exist in the container at mounting or else they break and not work. 
+This is the library I'm working with in order to provide the drag and drop functionality in this project. Still pretty new, as of fall 2024. 
 
-The solution is fairly simple, I've just added one and left it invisible. Not the most elegant thing, but it works. Hopefully in a future update soon it will be corrected. 
+updating to version 0.4.1 (from 0.3.0) has changed behaviour in a weird way. My dynamic swapy pages no longer work the way that they were. It appears that they now require at least one swapy-item exist in the container at mounting or else they break and not work. 
+
+The solution is fairly simple, just add a swapy item and leave it invisible. Not the most elegant thing, but it works. I've rolled back to 0.3.0 because I haven't had the need to use the features that have been added in the past couple of updates. Hopefully this isn't intended behaviour and in future updates it will be corrected. 

@@ -5,25 +5,26 @@ import type { Ref } from 'vue';
 import { Dice } from '@/utils';
 import DiceSlot from '@/components/DiceSlot.vue';
 import DiceUnit from '@/components/DiceUnit.vue';
+import DiceRow from '@/components/DiceRow.vue';
 import { searchDiceSetById, deleteDiceFromSet, generateDice } from '@/utils';
 
+const diceRowIds = new Set(["a"])
+
 const diceSet: Ref<Set<Dice>> = ref(new Set([]))
+const summedDice = ref(0)
+const selectedDice: Ref<Dice | null> = ref(null)
 
 const container = ref<HTMLDivElement | null>(null) // contains the ref of the container where all the data is swapped around in
 
 const swapy: Ref<Swapy | null> = ref(null)
 
-const testContainer = () => {
-    console.log(typeof(container))
-    if (container) {
-        console.log("What can we do with this?")
-    }
+const setSelectedDice = (dice: Dice) => {
+    selectedDice.value = dice
 }
 
 const diceClick = () => {
     let newDice = generateDice()
     diceSet.value.add(newDice)
-
 }
 
 // Runs frequently (perhaps every rerender trigger) after being mounted
@@ -34,12 +35,12 @@ onMounted(() => {
         console.log("on swap activating")
         // summedDice.value = sum
     })
-    swapy.value.onSwapEnd(({data, hasChanged}) => {
+    swapy.value.onSwapEnd(({data}) => {
         // cleanUpSlots(data.object)
-        console.log(hasChanged ? "bing" : "bong")
     })
   }
 })
+
 </script>
 
 <template>
@@ -50,8 +51,12 @@ onMounted(() => {
     >
         <h1>SETS OF DICE</h1>
 
-        <DiceSlot 
-        slotId="a1"
+        <h2>Sum: {{ summedDice }}</h2>
+
+        <DiceRow 
+        v-for="id in diceRowIds"
+        :id-letter="id"
+        :dice-list="diceSet"
         />
     
         <div class="pool">
@@ -66,6 +71,7 @@ onMounted(() => {
                     class="dice"
                     :data-swapy-item="dice.id"
                     :value="dice"
+                    @mouseenter="setSelectedDice(dice)"
                     >
                         <div>{{ dice.value }}</div>
                     </div>
@@ -75,15 +81,7 @@ onMounted(() => {
         <button class="button" @click="diceClick">
             Add Dice
         </button>
-        <button class="button" @click="testContainer">
-            DISABLE/ENABLE
-       </button>
-
-        <!-- Needs to exist in the code (I guess a minimum of one swap item?) for swapy to function in Swapy 0.4.1 -->
-        <DiceUnit 
-        v-show="false"
-        :dice="new Dice(3)"
-        />
+        <h3>Dice selected: {{ selectedDice? selectedDice.id : "None"}}</h3>
     </div>
 </template>
 

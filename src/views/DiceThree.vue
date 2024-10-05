@@ -34,9 +34,8 @@ onMounted(() => {
         summedDice.value = sum
         mostRecentSwapObject.value = data.object
     })
-    swapy.onSwapEnd(({data, hasChanged}) => {
+    swapy.onSwapEnd(({data}) => {
         cleanUpSlots(data.object)
-        console.log(hasChanged ? "bing" : "bong")
     })
 
     // see if this works
